@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>数据加解密</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+      integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+      integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+      integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+      crossorigin="anonymous"
+    ></script>
+
+    <style>
+      h4 {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" ng-app="app">
+      <section>
+        <h4>sm4数据加解密</h4>
+        <form
+          name="submitForm"
+          novalidate
+          ng-controller="validateCtrl"
+          ng-submit="handleSubmit"
+        >
+          <div class="form-group">
+            <label for="type0" style="margin-right: 15px;"
+              ><input
+                id="type0"
+                type="radio"
+                ng-model="type"
+                value="0"
+              />加密</label
+            >
+            <label for="type1"
+              ><input
+                id="type1"
+                type="radio"
+                ng-model="type"
+                value="1"
+              />解密</label
+            >
+          </div>
+          <div class="form-group">
+            <label for="key">密钥</label>
+            <input
+              type="text"
+              class="form-control"
+              id="key"
+              placeholder="请输入"
+              ng-model="key"
+            />
+          </div>
+          <div class="form-group">
+            <label for="plantext">需要加解密的内容</label>
+            <textarea
+              type="text"
+              class="form-control"
+              id="plantext"
+              placeholder="请输入"
+              ng-model="plantext"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <button
+              class="btn btn-default"
+              type="submit"
+              ng-click="handleSubmit()"
+            >
+              提交
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </body>
+
+  <script>
+    var app = angular.module("app", []);
+    app.controller("validateCtrl", function ($scope, $http) {
+      // 表单提交
+      $scope.handleSubmit = function () {
+        const type = $scope.type;
+        const key = $scope.key; // 密钥
+        const plantext = $scope.plantext; // 加密或者解密的内容
+        if (type === "0") {
+          // 加密
+          $http
+            .post("http://localhost:8080/api/crpty", {
+              key: key,
+              plantext: plantext,
+            })
+            .then(function (res) {
+              console.log(res);
+            });
+        } else if (type === "1") {
+          // 解密
+          $http
+            .post("http://localhost:8080/api/depty", {
+              key: key,
+              plantext: plantext,
+            })
+            .then(function (res) {
+              console.log(res);
+            });
+        }
+      };
+    });
+  </script>
+</html>
